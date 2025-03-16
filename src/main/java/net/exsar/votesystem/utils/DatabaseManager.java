@@ -10,6 +10,7 @@ import java.sql.Statement;
 @Getter
 public class DatabaseManager {
 
+    @Getter
     private static HikariDataSource connection;
     private static final String prefix = "§8[§c§lMYSQL§8] §7";
 
@@ -51,7 +52,8 @@ public class DatabaseManager {
                 connection.setConnectionTimeout(45000);
                 connection.setIdleTimeout(600000);
                 connection.setMaxLifetime(1800000);
-                onUpdate("CREATE TABLE IF NOT EXISTS players (player VARCHAR(255), tokens INTEGER)");
+                onUpdate("CREATE TABLE IF NOT EXISTS players (player VARCHAR(255), tokens INTEGER, vote INTEGER)");
+                onUpdate("CREATE TABLE IF NOT EXISTS vote_streaks (player VARCHAR(255), last_vote_time BIGINT, streak INT)");
                 Bukkit.getConsoleSender().sendMessage(prefix + "Verbindung aufgebaut!");
             }
         } catch (ClassNotFoundException exception) {
