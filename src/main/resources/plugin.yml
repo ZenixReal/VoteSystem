@@ -1,0 +1,6 @@
+name: Vote-System
+version: '1.0'
+main: net.exsar.votesystem.VoteSystem
+api-version: '1.21'
+authors: [Ensar]
+description: Testaufgabe für GermanMinerDE
