@@ -1,6 +1,5 @@
 package net.exsar.votesystem;
 
-import net.exsar.votesystem.commands.TokenCommand;
 import net.exsar.votesystem.features.VoteManager;
 import net.exsar.votesystem.features.VoteStreakManager;
 import net.exsar.votesystem.utils.DatabaseManager;
@@ -21,10 +20,7 @@ public final class VoteSystem extends JavaPlugin {
         );
         databaseManager.load();
         new VoteStreakManager(); // Initialisierung des VoteStreaks
-        new VoteManager(); // Initialisierung des Tokens-System
-
-        new TokenCommand("tokens", this); // Registrierung des Tokens-Befehl.
-
+        new VoteManager(); // Initialisierung des Token-Systems
 
         Bukkit.getConsoleSender().sendMessage(prefix + "Plugin erfolgreich aktiviert.");
     }
