@@ -20,7 +20,7 @@ public class DatabaseManager {
     private final String password;
 
     public DatabaseManager(String ip, String database, String username, String password) {
-        this.ip = password;
+        this.ip = ip;
         this.database = database;
         this.username = username;
         this.password = password;
@@ -52,8 +52,8 @@ public class DatabaseManager {
                 connection.setConnectionTimeout(45000);
                 connection.setIdleTimeout(600000);
                 connection.setMaxLifetime(1800000);
-                onUpdate("CREATE TABLE IF NOT EXISTS players (player VARCHAR(255), tokens INTEGER, vote INTEGER)");
-                onUpdate("CREATE TABLE IF NOT EXISTS vote_streaks (player VARCHAR(255), last_vote_time BIGINT, streak INT)");
+                createTable("players", "player VARCHAR(255)", "tokens INTEGER", "vote INTEGER", "last_vote_time BIGINT", "streak INTEGER", "saver INTEGER");
+                createTable("already_bought", "player VARCHAR(255)", "item VARCHAR(255)");
                 Bukkit.getConsoleSender().sendMessage(prefix + "Verbindung aufgebaut!");
             }
         } catch (ClassNotFoundException exception) {
@@ -87,5 +87,10 @@ public class DatabaseManager {
         } catch (NullPointerException | SQLException exception) {
             System.err.println(exception.getMessage());
         }
+    }
+
+    private void createTable(String name, String... variables) {
+        String columns = String.join(", ", variables);
+        onUpdate("CREATE TABLE IF NOT EXISTS " + name + " (" + columns + ")");
     }
 }
