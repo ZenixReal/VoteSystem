@@ -101,14 +101,12 @@ public class ItemManager {
                 break;
 
             case X15_FLY_TICKETS:
-                // Implementierung des Flugtickets.
                 player.closeInventory();
                 ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun §l15x Flugtickets für Farmwelt §r§aerhalten.");
                 tokenManager.remove(item.getCost());
                 break;
 
             case RANDOM_EFFECT_PACKAGE:
-                // Implementierung des Effektepaketes.
                 player.closeInventory();
                 ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun ein zufälligen Effektpaket erhalten! Siehe über §l'/effekte' §r§anach.");
                 tokenManager.remove(item.getCost());
@@ -138,7 +136,6 @@ public class ItemManager {
                 break;
 
             case ONE_MONTH_VIP_PREMIUM:
-                // Implementierung des Rängesystems.
                 player.closeInventory();
                 tokenManager.remove(item.getCost());
                 player.sendMessage(Component.text("1 Monat VIP Premium"));

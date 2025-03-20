@@ -19,10 +19,10 @@ public final class VoteSystem extends JavaPlugin {
     @Override
     public void onEnable() {
         DatabaseManager databaseManager = new DatabaseManager(
-                "45.142.104.10",
-                "testaufgabe",
-                "uwuhastig",
-                "1234512345!ABCDEFGH!"
+                "",
+                "",
+                "",
+                ""
         );
         databaseManager.load();
 

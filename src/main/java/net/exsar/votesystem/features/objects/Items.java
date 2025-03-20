@@ -8,9 +8,10 @@ import net.exsar.votesystem.utils.NumberUtils;
 public enum Items {
 
     /*
-     * 1 Token umgerechnet = 70 € Ingame-Geld
-     * unique = einmalig kaufbar.
-     * cost = pro Item / (15 Tickets = 1 Token, 1 Monat VIP Premium = 1.500 Tokens)
+     * ERKLÄRUNG:
+     * -> 1 Token umgerechnet = 70 € Ingame-Geld
+     * -> unique = einmalig kaufbar.
+     * -> cost = pro Item / (15 Tickets = 1 Token, 1 Monat VIP Premium = 1.500 Tokens)
      */
 
 

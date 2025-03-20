@@ -45,7 +45,7 @@ public class TokensAdminCommand extends Command<VoteSystem> {
                         break;
                     case "remove":
                         if(amount > tokenManager.get()) {
-                            ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "Der Spieler besitzt nicht so viele Tokens, um es abgezogen zu werden.");
+                            ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "Der Spieler besitzt nicht so viele Tokens, um abgezogen werden zu können.");
                             return;
                         }
                         tokenManager.remove(amount);
@@ -75,7 +75,6 @@ public class TokensAdminCommand extends Command<VoteSystem> {
                 list.addAll(Arrays.asList("add", "remove", "set"));
             } else if (args.length==2) {
                 for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                    // Implementierung des letzten 30-Tagen abfrage...
                     list.add(player.getName());
                 }
             } else if(args.length == 3) {

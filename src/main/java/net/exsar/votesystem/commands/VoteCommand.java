@@ -41,7 +41,7 @@ public class VoteCommand extends Command<VoteSystem> {
                 }
                 if(!voteSiteData.isFirst_site()) {
                     site1 = Component.text("§a§l[LINK 1]")
-                            .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/vote set 1 true"))
+                            .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/vote set 1"))
                             .hoverEvent(HoverEvent.showText(Component.text("§7§oKlicke, um auf die 1. Seite abzustimmen.")));
                 } else {
                     site1 = Component.text("§c§l§m[LINK 1]")
@@ -49,7 +49,7 @@ public class VoteCommand extends Command<VoteSystem> {
                 }
                 if(!voteSiteData.isSecond_site()) {
                     site2 = Component.text("§a§l[LINK 2]")
-                            .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/vote set 2 true"))
+                            .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/vote set 2"))
                             .hoverEvent(HoverEvent.showText(Component.text("§7§oKlicke, um auf die 2. Seite abzustimmen.")));
                 } else {
                     site2 = Component.text("§c§l§m[LINK 2]")
@@ -103,52 +103,38 @@ public class VoteCommand extends Command<VoteSystem> {
                     player.sendMessage("§7 - Zuletzt Vote-Streak aufgebaut: " + NumberUtils.timeFromLong(data.getLastVote()));
                     player.sendMessage("§7 - 1. Seite: §f" + first);
                     player.sendMessage("§7 - 2. Seite: §f" + second);
-                }
-            } else if(args.length == 3) {
-                TokenManager tokenManager = new TokenManager(player);
-                PlayerData data = VoteManager.getData(player);
-                // "/votes set 2 true"
-                if(args[0].equalsIgnoreCase("set")) {
-                   if(args[1].equalsIgnoreCase("1")) {
-                       boolean toggle = Boolean.parseBoolean(args[2]);
-                       if(toggle && !voteSiteData.isFirst_site()) {
-                           ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + VoteManager.getStreakToken(player) + " Vote-Token!");
-                           tokenManager.add(VoteManager.getStreakToken(player));
-                           voteSiteData.setFirst_site(true);
-                           data.setVote(data.getVote() + 1);
-                           VoteManager.update(player, data);
-                           if(voteSiteData.isSecond_site()) {
-                               VoteManager.addVoteStreak(player);
-                           }
-                       } else {
-                           voteSiteData.setFirst_site(false);
-                           data.setVote(data.getVote() - 1);
-                           VoteManager.update(player, data);
-                           tokenManager.remove(VoteManager.getStreakToken(player));
-                           ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast deine Vote-Seite entfernt.");
-                       }
-                       VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
-                   } else if(args[1].equalsIgnoreCase("2")) {
-                       boolean toggle = Boolean.parseBoolean(args[2]);
-                       if(toggle && !voteSiteData.isSecond_site()) {
-                           ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + VoteManager.getStreakToken(player) + " Vote-Token!");
-                           tokenManager.add(VoteManager.getStreakToken(player));
-                           voteSiteData.setSecond_site(true);
-                           data.setVote(data.getVote() + 1);
-                           VoteManager.update(player, data);
-                           if(voteSiteData.isFirst_site()) {
-                               VoteManager.addVoteStreak(player);
-                           }
-
-                       } else {
-                           voteSiteData.setSecond_site(false);
-                           data.setVote(data.getVote() - 1);
-                           VoteManager.update(player, data);
-                           tokenManager.remove(VoteManager.getStreakToken(player));
-                           ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast deine Vote-Seite entfernt.");
-                       }
-                       VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
-                   }
+                } else if(args[0].equalsIgnoreCase("set")) {
+                    TokenManager tokenManager = new TokenManager(player);
+                    PlayerData data = VoteManager.getData(player);
+                    if(args[1].equalsIgnoreCase("1")) {
+                        if(!voteSiteData.isFirst_site()) {
+                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + VoteManager.getStreakToken(player) + " Vote-Token!");
+                            tokenManager.add(VoteManager.getStreakToken(player));
+                            voteSiteData.setFirst_site(true);
+                            data.setVote(data.getVote() + 1);
+                            VoteManager.update(player, data);
+                            if(voteSiteData.isSecond_site()) {
+                                VoteManager.addVoteStreak(player);
+                            }
+                            VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
+                        } else {
+                            ChatUtils.sendMessage(player, ChatUtils.ChatType.INFO, "Du hast bereits gevotet.");
+                        }
+                    } else if(args[1].equalsIgnoreCase("2")) {
+                        if(!voteSiteData.isSecond_site()) {
+                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + VoteManager.getStreakToken(player) + " Vote-Token!");
+                            tokenManager.add(VoteManager.getStreakToken(player));
+                            voteSiteData.setSecond_site(true);
+                            data.setVote(data.getVote() + 1);
+                            VoteManager.update(player, data);
+                            if(voteSiteData.isFirst_site()) {
+                                VoteManager.addVoteStreak(player);
+                            }
+                            VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
+                        } else {
+                            ChatUtils.sendMessage(player, ChatUtils.ChatType.INFO, "Du hast bereits gevotet.");
+                        }
+                    }
                 }
             }
         }
@@ -165,7 +151,6 @@ public class VoteCommand extends Command<VoteSystem> {
         } else if(args.length == 2) {
             if(args[0].equalsIgnoreCase("info") && sender.hasPermission("votesystem.view")) {
                 for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                    // Implementierung des letzten 30-Tagen abfrage...
                     list.add(player.getName());
                 }
             }

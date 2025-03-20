@@ -37,8 +37,6 @@ public class VoteManager {
         return 1;
     }
 
-    // onUpdate("CREATE TABLE IF NOT EXISTS players (player VARCHAR(255), tokens INTEGER, vote INTEGER, last_vote_time BIGINT, streak INTEGER)");
-
     private void initialize() {
         try (PreparedStatement statement = DatabaseManager.getConnection().getConnection().prepareStatement("SELECT * FROM players"); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
