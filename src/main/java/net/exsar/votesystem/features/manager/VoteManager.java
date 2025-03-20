@@ -7,6 +7,7 @@ import net.exsar.votesystem.utils.ChatUtils;
 import net.exsar.votesystem.utils.DatabaseManager;
 import org.bukkit.OfflinePlayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -92,18 +93,24 @@ public class VoteManager {
     }
 
     public static void update(OfflinePlayer player, PlayerData data) {
-        dataHashMap.put(player.getUniqueId(), data);
-        try (PreparedStatement statement = DatabaseManager.getConnection().getConnection()
-                .prepareStatement("UPDATE players SET tokens = ?, vote = ?, last_vote_time = ?, streak = ?, saver = ? WHERE player = ?")) {
+        String query = "UPDATE players SET tokens = ?, vote = ?, last_vote_time = ?, streak = ?, saver = ? WHERE player = ?";
+
+        try (Connection connection = DatabaseManager.getConnection().getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
             statement.setInt(1, data.getTokens());
             statement.setInt(2, data.getVote());
             statement.setLong(3, data.getLastVote());
             statement.setInt(4, data.getStreak());
             statement.setInt(5, data.getSaver());
             statement.setString(6, player.getUniqueId().toString());
-            statement.executeUpdate();
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) System.out.println("Warnung: Kein Datensatz wurde aktualisiert für Spieler: " + player.getUniqueId());
+            dataHashMap.put(player.getUniqueId(), data);
         } catch (SQLException exception) {
-            throw new RuntimeException(exception);
+            System.err.println("Fehler bei der Datenbankabfrage: " + exception.getMessage());
+            throw new RuntimeException("Fehler bei der Aktualisierung der Spieler-Daten", exception);
         }
     }
 

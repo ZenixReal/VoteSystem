@@ -12,6 +12,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.*;
 import java.util.*;
@@ -55,7 +56,10 @@ public class ItemManager {
     }
 
     private static boolean hasBought(Player player, Items item) {
-        return already_bought.containsKey(player.getUniqueId()) && already_bought.containsValue(item);
+        if(already_bought.containsKey(player.getUniqueId())) {
+            return already_bought.containsValue(item);
+        }
+        return false;
     }
 
     public static void addItem(Player player, Items item) {
@@ -75,9 +79,11 @@ public class ItemManager {
             }
         }
 
-        if(item.isPhysical() && !InventoryTool.hasSpace(player.getInventory())) {
-            ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du hast kein Platz im Inventar.");
-            return;
+        if(item.isPhysical()) {
+            if(!InventoryTool.hasInventorySpace(player)) {
+                ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du hast kein Platz im Inventar.");
+                return;
+            }
         }
         switch (item) {
             case SUPER_PICKAXE:
@@ -95,12 +101,14 @@ public class ItemManager {
                 break;
 
             case X15_FLY_TICKETS:
+                // Implementierung des Flugtickets.
                 player.closeInventory();
                 ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun §l15x Flugtickets für Farmwelt §r§aerhalten.");
                 tokenManager.remove(item.getCost());
                 break;
 
             case RANDOM_EFFECT_PACKAGE:
+                // Implementierung des Effektepaketes.
                 player.closeInventory();
                 ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun ein zufälligen Effektpaket erhalten! Siehe über §l'/effekte' §r§anach.");
                 tokenManager.remove(item.getCost());
@@ -130,7 +138,9 @@ public class ItemManager {
                 break;
 
             case ONE_MONTH_VIP_PREMIUM:
+                // Implementierung des Rängesystems.
                 player.closeInventory();
+                tokenManager.remove(item.getCost());
                 player.sendMessage(Component.text("1 Monat VIP Premium"));
                 break;
         }

@@ -11,6 +11,10 @@ public class TokenManager {
         this.player = player;
     }
 
+    public int get() {
+        return VoteManager.getData(player).getTokens();
+    }
+
     public void add(int token) {
         PlayerData data = VoteManager.getData(player);
         data.setTokens(data.getTokens() + token);

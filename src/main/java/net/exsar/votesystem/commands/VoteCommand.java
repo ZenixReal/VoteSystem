@@ -8,7 +8,6 @@ import net.exsar.votesystem.features.objects.PlayerData;
 import net.exsar.votesystem.features.objects.VoteSiteData;
 import net.exsar.votesystem.utils.ChatUtils;
 import net.exsar.votesystem.utils.Command;
-import net.exsar.votesystem.utils.DatabaseManager;
 import net.exsar.votesystem.utils.NumberUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -19,12 +18,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class VoteCommand extends Command<VoteSystem> {
@@ -60,9 +55,15 @@ public class VoteCommand extends Command<VoteSystem> {
                     site2 = Component.text("§c§l§m[LINK 2]")
                             .hoverEvent(HoverEvent.showText(Component.text("§7§oDu kannst auf diese Seite nicht mehr voten.")));
                 }
-                player.sendMessage(Component.text("    ").append(site1).append(Component.text("    ")).append(site2));
+                player.sendMessage(
+                        Component.text("    ")
+                                .append(site1)
+                                .append(Component.text("    "))
+                                .append(site2)
+                );
             } else if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("shop")) {
+                    // Auch mit einem NPC möglich.
                     VoteInventories.openShop(player);
                 }
             } else if(args.length == 2) {
@@ -78,7 +79,11 @@ public class VoteCommand extends Command<VoteSystem> {
                     }
                     PlayerData data = VoteManager.getData(target);
                     VoteSiteData viewSiteData = VoteManager.getVoteSite(target);
-
+                    if(voteSiteData == null) {
+                        VoteSiteData newData = new VoteSiteData(false, false);
+                        VoteManager.getVoteSiteDataHashMap().put(target.getUniqueId(), newData);
+                        viewSiteData = newData;
+                    }
                     String first = "§cNein";
                     String second = "§cNein";
 
@@ -154,6 +159,16 @@ public class VoteCommand extends Command<VoteSystem> {
         List<String> list = new ArrayList<>();
         if(args.length == 1) {
             list.add("shop");
+            if(sender.hasPermission("votesystem.view")) {
+                list.add("info");
+            }
+        } else if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("info") && sender.hasPermission("votesystem.view")) {
+                for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+                    // Implementierung des letzten 30-Tagen abfrage...
+                    list.add(player.getName());
+                }
+            }
         }
         return list.stream()
                 .filter(l -> l.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))

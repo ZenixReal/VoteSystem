@@ -1,9 +1,12 @@
 package net.exsar.votesystem.utils;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class InventoryTool {
@@ -17,13 +20,11 @@ public class InventoryTool {
             }
         }
     }
-    public static boolean hasSpace(PlayerInventory playerInventory) {
-        for(int i = 0; i < playerInventory.getSize(); i++) {
-            if(playerInventory.getItem(i) == null) {
-                return true;
-            }
-        }
-        return false;
-    }
 
+    public static boolean hasInventorySpace(Player player) {
+        Inventory inventory = player.getInventory();
+
+        int freieSlots = inventory.firstEmpty();
+        return freieSlots != -1;
+    }
 }

@@ -25,7 +25,7 @@ public class ChatUtils {
         INFO("§b§l» §fℹ §b", "notification_info"),
         QUESTION("§b§l» §9§l? §b", "notification_info"),
         ERROR("§c§l» §4§l✖ §c", "notification_error"),
-        WARNING("§e§l» §4§l⚠ §a", "notification_warning");
+        WARNING("§e§l» §4§l⚠ §e", "notification_warning");
 
         private final String prefix;
         private final String sound;

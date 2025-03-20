@@ -38,11 +38,15 @@ public class VoteInventories {
         inventory.setItem(27, walls);
         inventory.setItem(35, walls);
         for (int i = 36; i<45; i++) inventory.setItem(i, walls);
+        String lastVote = NumberUtils.timeFromLong(data.getLastVote());
+        if(data.getLastVote() == -1) {
+            lastVote = "Noch nie gevotet.";
+        }
         inventory.setItem(8, new SkullBuilder("http://textures.minecraft.net/texture/16439d2e306b225516aa9a6d007a7e75edd2d5015d113b42f44be62a517e574f")
                 .displayName("§9§lINFO")
                 .lore(
                         "§7- Tokens: §f" + NumberUtils.format(data.getTokens()),
-                        "§7- Zuletzt Streak aufgebaut: §f" + NumberUtils.timeFromLong(data.getLastVote()),
+                        "§7- Zuletzt Streak aufgebaut: §f" + lastVote,
                         "§7- Aktueller Streak: §f" + NumberUtils.format(data.getStreak()),
                         "§7- Streak-Schutzpunkt: §f" + NumberUtils.format(data.getSaver()),
                         "§7- Votes: §f" + NumberUtils.format(data.getVote())
@@ -51,7 +55,7 @@ public class VoteInventories {
 
         inventory.addItem(
                 new ItemBuilder(Material.DIAMOND_PICKAXE)
-                        .displayName("§c§lSuperwerkzeug | Weihnachten 2023")
+                        .displayName("§c§lSuperwerkzeug")
                         .lore(
                                 "§r",
                                 "§7Preis: §f" + Items.SUPER_PICKAXE.formattedCost() + " Tokens",

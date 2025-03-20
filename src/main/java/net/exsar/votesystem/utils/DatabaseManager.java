@@ -49,7 +49,7 @@ public class DatabaseManager {
                 connection.setUsername(getUsername());
                 connection.setPassword(getPassword());
                 connection.setMaximumPoolSize(20);
-                connection.setConnectionTimeout(45000);
+                connection.setConnectionTimeout(30000);
                 connection.setIdleTimeout(600000);
                 connection.setMaxLifetime(1800000);
                 createTable("players", "player VARCHAR(255)", "tokens INTEGER", "vote INTEGER", "last_vote_time BIGINT", "streak INTEGER", "saver INTEGER");

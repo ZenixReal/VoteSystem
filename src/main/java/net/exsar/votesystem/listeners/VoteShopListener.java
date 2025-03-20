@@ -23,7 +23,7 @@ public class VoteShopListener implements Listener {
             if (event.getView().title().equals(Component.text("§c§lVOTE-SHOP"))) {
                 event.setCancelled(true);
                 Player player = (Player) event.getWhoClicked();
-                if (Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§c§lSuperwerkzeug | Weihnachten 2023"))) {
+                if (Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§c§lSuperwerkzeug"))) {
                     ItemManager.addItem(player, Items.SUPER_PICKAXE);
                 } else if (Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§5§lEffektpaket (Stufe 1)"))) {
                     ItemManager.addItem(player, Items.RANDOM_EFFECT_PACKAGE);
@@ -100,11 +100,17 @@ public class VoteShopListener implements Listener {
                     VoteInventories.openAmount(player);
                 } else if(Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§a§lEingabe bestätigen"))) {
                     int available = getAvailableSpace(player, item);
+                    int cost = (items.getCost() * currentAmount);
                     TokenManager tokenManager = new TokenManager(player);
                     ItemStack give = new ItemStack(item.getType(), currentAmount);
+                    if(!tokenManager.check(cost)) {
+                        ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du hast dafür zu wenig Tokens.");
+                        return;
+                    }
+
                     if(available >= currentAmount) {
                         player.closeInventory();
-                        int cost = (items.getCost() * currentAmount);
+
                         tokenManager.remove(cost);
                         VoteInventories.getAmountOfItems().remove(player.getUniqueId());
                         player.getInventory().addItem(give);

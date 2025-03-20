@@ -26,16 +26,28 @@ public class TokensAdminCommand extends Command<VoteSystem> {
             return;
         }
         if(args.length == 3) {
+            if(args[2].startsWith("-")) {
+                ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "Es muss eine positive Zahl sein.");
+                return;
+            }
             try {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
                 int amount = Integer.parseInt(args[2]);
                 TokenManager tokenManager = new TokenManager(player);
+                if(!player.hasPlayedBefore()) {
+                    ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "Dieser Spieler war zuvor noch nie auf dem Server gewesen.");
+                    return;
+                }
                 switch (args[0]) {
                     case "add":
                         tokenManager.add(amount);
                         ChatUtils.sendMessage(sender, ChatUtils.ChatType.SUCCESS, "Du hast " + player.getName() + " Tokens i.H.v " + amount + " hinzugefügt.");
                         break;
                     case "remove":
+                        if(amount > tokenManager.get()) {
+                            ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "Der Spieler besitzt nicht so viele Tokens, um es abgezogen zu werden.");
+                            return;
+                        }
                         tokenManager.remove(amount);
                         ChatUtils.sendMessage(sender, ChatUtils.ChatType.SUCCESS, "Du hast " + player.getName() + " Tokens i.H.v " + amount + " entfernt.");
                         break;
@@ -50,14 +62,25 @@ public class TokensAdminCommand extends Command<VoteSystem> {
             } catch (NumberFormatException ignored) {
                 ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "Es muss eine Zahl sein.");
             }
+        } else {
+            ChatUtils.sendMessage(sender, ChatUtils.ChatType.WARNING, "/" + prefix + " set/add/remove <SPIELERNAME> <ANZAHL>");
         }
     }
 
     @Override
     public List<String> complete(CommandSender sender, String prefix, String[] args) {
         List<String> list = new ArrayList<>();
-        if(args.length == 1 && sender.hasPermission("votesystem.edittoken")) {
-            list.addAll(Arrays.asList("add", "remove", "set"));
+        if(sender.hasPermission("votesystem.edittoken")) {
+            if (args.length==1) {
+                list.addAll(Arrays.asList("add", "remove", "set"));
+            } else if (args.length==2) {
+                for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
+                    // Implementierung des letzten 30-Tagen abfrage...
+                    list.add(player.getName());
+                }
+            } else if(args.length == 3) {
+                list.add("ANZAHL");
+            }
         }
         return list.stream()
                 .filter(l -> l.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
