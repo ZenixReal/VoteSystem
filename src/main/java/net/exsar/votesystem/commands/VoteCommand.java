@@ -4,6 +4,7 @@ import net.exsar.votesystem.VoteSystem;
 import net.exsar.votesystem.features.VoteInventories;
 import net.exsar.votesystem.features.manager.TokenManager;
 import net.exsar.votesystem.features.manager.VoteManager;
+import net.exsar.votesystem.features.manager.VoteStreakManager;
 import net.exsar.votesystem.features.objects.PlayerData;
 import net.exsar.votesystem.features.objects.VoteSiteData;
 import net.exsar.votesystem.utils.ChatUtils;
@@ -106,15 +107,17 @@ public class VoteCommand extends Command<VoteSystem> {
                 } else if(args[0].equalsIgnoreCase("set")) {
                     TokenManager tokenManager = new TokenManager(player);
                     PlayerData data = VoteManager.getData(player);
+                    VoteManager voteManager = new VoteManager(player);
+                    VoteStreakManager voteStreakManager = new VoteStreakManager(player);
                     if(args[1].equalsIgnoreCase("1")) {
                         if(!voteSiteData.isFirst_site()) {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + VoteManager.getStreakToken(player) + " Vote-Token!");
-                            tokenManager.add(VoteManager.getStreakToken(player));
+                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
+                            tokenManager.add(voteManager.getStreakToken());
                             voteSiteData.setFirst_site(true);
                             data.setVote(data.getVote() + 1);
-                            VoteManager.update(player, data);
+                            voteManager.update(data);
                             if(voteSiteData.isSecond_site()) {
-                                VoteManager.addVoteStreak(player);
+                                voteStreakManager.addVoteStreak();
                             }
                             VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
                         } else {
@@ -122,13 +125,13 @@ public class VoteCommand extends Command<VoteSystem> {
                         }
                     } else if(args[1].equalsIgnoreCase("2")) {
                         if(!voteSiteData.isSecond_site()) {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + VoteManager.getStreakToken(player) + " Vote-Token!");
-                            tokenManager.add(VoteManager.getStreakToken(player));
+                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
+                            tokenManager.add(voteManager.getStreakToken());
                             voteSiteData.setSecond_site(true);
                             data.setVote(data.getVote() + 1);
-                            VoteManager.update(player, data);
+                            voteManager.update(data);
                             if(voteSiteData.isFirst_site()) {
-                                VoteManager.addVoteStreak(player);
+                                voteStreakManager.addVoteStreak();
                             }
                             VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
                         } else {

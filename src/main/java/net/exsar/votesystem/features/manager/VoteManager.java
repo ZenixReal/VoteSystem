@@ -3,7 +3,6 @@ package net.exsar.votesystem.features.manager;
 import lombok.Getter;
 import net.exsar.votesystem.features.objects.PlayerData;
 import net.exsar.votesystem.features.objects.VoteSiteData;
-import net.exsar.votesystem.utils.ChatUtils;
 import net.exsar.votesystem.utils.DatabaseManager;
 import org.bukkit.OfflinePlayer;
 
@@ -12,24 +11,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 public class VoteManager {
 
     @Getter
-    private static HashMap<UUID, VoteSiteData> voteSiteDataHashMap;
+    private static HashMap<UUID, VoteSiteData> voteSiteDataHashMap = new HashMap<>();
     @Getter
-    private static HashMap<UUID, PlayerData> dataHashMap;
+    private static HashMap<UUID, PlayerData> dataHashMap = new HashMap<>();
 
-
-    public VoteManager() {
-        dataHashMap = new HashMap<>();
-        voteSiteDataHashMap = new HashMap<>();
-        initialize();
+    private final OfflinePlayer player;
+    public VoteManager(OfflinePlayer player) {
+        this.player = player;
     }
 
-    public static int getStreakToken(OfflinePlayer player) {
+    public int getStreakToken() {
         int streak = getData(player).getStreak();
         if(streak >= 120) return 4;
         if(streak >= 60) return 2;
@@ -37,7 +33,7 @@ public class VoteManager {
         return 1;
     }
 
-    private void initialize() {
+    public static void initialize() {
         try (PreparedStatement statement = DatabaseManager.getConnection().getConnection().prepareStatement("SELECT * FROM players"); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 UUID uuid = UUID.fromString(resultSet.getString("player"));
@@ -60,7 +56,7 @@ public class VoteManager {
         }
     }
 
-    public static void register(OfflinePlayer player) {
+    public void register() {
         try (
             PreparedStatement statement = DatabaseManager.getConnection().getConnection()
                     .prepareStatement("INSERT INTO players VALUES (?, ?, ?, ?, ?, ?)")
@@ -79,7 +75,7 @@ public class VoteManager {
         }
     }
 
-    public static boolean isRegistered(OfflinePlayer player) {
+    public boolean isRegistered() {
         try (PreparedStatement statement = DatabaseManager.getConnection().getConnection()
                 .prepareStatement("SELECT * FROM players WHERE player = ?")){
             statement.setString(1, player.getUniqueId().toString());
@@ -90,7 +86,7 @@ public class VoteManager {
         }
     }
 
-    public static void update(OfflinePlayer player, PlayerData data) {
+    public void update(PlayerData data) {
         String query = "UPDATE players SET tokens = ?, vote = ?, last_vote_time = ?, streak = ?, saver = ? WHERE player = ?";
 
         try (Connection connection = DatabaseManager.getConnection().getConnection();
@@ -112,64 +108,11 @@ public class VoteManager {
         }
     }
 
-    public static void addVoteStreak(OfflinePlayer player) {
-        PlayerData data = getData(player);
-        boolean isStreakBroken = data.checkIfVoteStreakBroken(System.currentTimeMillis());
-        if(!isRegistered(player))
-            return;
-
-        if(getVoteSite(player).isFirst_site() && getVoteSite(player).isSecond_site()) {
-            if(isStreakBroken) {
-                if(data.getSaver() > 0) {
-                    data.removeSaver();
-                    if(player.isOnline()) {
-                        ChatUtils.sendMessage(
-                                Objects.requireNonNull(player.getPlayer()),
-                                ChatUtils.ChatType.INFO,
-                                "Dein Vote-Streak ist geblieben. Dafür wurde dir ein Vote-Schutzpunkt entfernt."
-                        );
-                    }
-                } else {
-                    data.resetStreak();
-                }
-            } else {
-                data.addStreak();
-            }
-
-            update(player, data);
-            rewardPlayer(player);
-        }
+    public static VoteSiteData getVoteSite(OfflinePlayer target) {
+        return voteSiteDataHashMap.get(target.getUniqueId());
     }
 
-    private static void rewardPlayer(OfflinePlayer player) {
-        PlayerData data = getData(player);
-        int streak = data.getStreak();
-
-        switch (streak) {
-            case 10:
-                if(player.isOnline()) {
-                    ChatUtils.sendMessage(player.getPlayer(), ChatUtils.ChatType.SUCCESS, "500 €");
-                }
-                break;
-            case 20:
-                if(player.isOnline()) {
-                    ChatUtils.sendMessage(player.getPlayer(), ChatUtils.ChatType.SUCCESS, "VIP Premium 7 Tage");
-                }
-                break;
-
-            case 30:
-                if(player.isOnline()) {
-                    ChatUtils.sendMessage(player.getPlayer(), ChatUtils.ChatType.SUCCESS, "VIP Pro 1 Monat");
-                }
-                break;
-        }
-    }
-
-    public static VoteSiteData getVoteSite(OfflinePlayer player) {
-        return voteSiteDataHashMap.get(player.getUniqueId());
-    }
-
-    public static PlayerData getData(OfflinePlayer player) {
-        return dataHashMap.get(player.getUniqueId());
+    public static PlayerData getData(OfflinePlayer target) {
+        return dataHashMap.get(target.getUniqueId());
     }
 }

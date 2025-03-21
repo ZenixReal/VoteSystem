@@ -23,20 +23,21 @@ public class VoteShopListener implements Listener {
             if (event.getView().title().equals(Component.text("§c§lVOTE-SHOP"))) {
                 event.setCancelled(true);
                 Player player = (Player) event.getWhoClicked();
+                ItemManager itemManager = new ItemManager();
                 if (Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§c§lSuperwerkzeug"))) {
-                    ItemManager.addItem(player, Items.SUPER_PICKAXE);
+                    itemManager.addItem(player, Items.SUPER_PICKAXE);
                 } else if (Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§5§lEffektpaket (Stufe 1)"))) {
-                    ItemManager.addItem(player, Items.RANDOM_EFFECT_PACKAGE);
+                    itemManager.addItem(player, Items.RANDOM_EFFECT_PACKAGE);
                 } else if (Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§b§l15x Farmwelt-Flugtickets"))) {
-                    ItemManager.addItem(player, Items.X15_FLY_TICKETS);
+                    itemManager.addItem(player, Items.X15_FLY_TICKETS);
                 } else if(Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§b§l1 Monat VIP Premium"))) {
-                    ItemManager.addItem(player, Items.ONE_MONTH_VIP_PREMIUM);
+                    itemManager.addItem(player, Items.ONE_MONTH_VIP_PREMIUM);
                 } else if(Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§6Streak Schutzpunkt"))) {
-                    ItemManager.addItem(player, Items.STREAK_SAVER);
+                    itemManager.addItem(player, Items.STREAK_SAVER);
                 } else if(Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§5OP Gap"))) {
-                    ItemManager.addItem(player, Items.ENCHANTED_GOLDEN_APPLE);
+                    itemManager.addItem(player, Items.ENCHANTED_GOLDEN_APPLE);
                 } else if(Objects.equals(event.getCurrentItem().getItemMeta().displayName(), Component.text("§5Goldener Apfel"))) {
-                    ItemManager.addItem(player, Items.GOLDEN_APPLE);
+                    itemManager.addItem(player, Items.GOLDEN_APPLE);
                 }
             }
         } catch (NullPointerException ignored) {}

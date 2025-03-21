@@ -6,17 +6,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.UUID;
+
 public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if(!VoteManager.isRegistered(event.getPlayer())) {
-            VoteManager.register(event.getPlayer());
-        }
+        VoteManager voteManager = new VoteManager(event.getPlayer());
+        UUID uuid = event.getPlayer().getUniqueId();
 
-        if(!VoteManager.getVoteSiteDataHashMap().containsKey(event.getPlayer().getUniqueId())) {
+        if(!voteManager.isRegistered()) { voteManager.register(); }
+
+        if(!VoteManager.getVoteSiteDataHashMap().containsKey(uuid)) {
             VoteSiteData voteSiteData = new VoteSiteData(false, false);
-            VoteManager.getVoteSiteDataHashMap().put(event.getPlayer().getUniqueId(), voteSiteData);
+            VoteManager.getVoteSiteDataHashMap().put(uuid, voteSiteData);
         }
     }
 

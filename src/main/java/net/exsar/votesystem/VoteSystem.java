@@ -26,8 +26,8 @@ public final class VoteSystem extends JavaPlugin {
         );
         databaseManager.load();
 
-        new VoteManager();
-        new ItemManager();
+        VoteManager.initialize();
+        ItemManager.initialize();
 
         initListeners();
         initCommands();

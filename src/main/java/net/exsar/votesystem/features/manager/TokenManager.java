@@ -6,9 +6,11 @@ import org.bukkit.OfflinePlayer;
 public class TokenManager {
 
     private final OfflinePlayer player;
+    private final VoteManager voteManager;
 
     public TokenManager(OfflinePlayer player) {
         this.player = player;
+        this.voteManager = new VoteManager(player);
     }
 
     public int get() {
@@ -18,19 +20,19 @@ public class TokenManager {
     public void add(int token) {
         PlayerData data = VoteManager.getData(player);
         data.setTokens(data.getTokens() + token);
-        VoteManager.update(player, data);
+        voteManager.update(data);
     }
 
     public void remove(int token) {
         PlayerData data = VoteManager.getData(player);
         data.setTokens(data.getTokens() - token);
-        VoteManager.update(player, data);
+        voteManager.update(data);
     }
 
     public void set(int token) {
         PlayerData data = VoteManager.getData(player);
         data.setTokens(token);
-        VoteManager.update(player, data);
+        voteManager.update(data);
     }
 
     public boolean check(int token) {
