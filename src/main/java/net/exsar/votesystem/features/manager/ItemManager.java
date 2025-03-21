@@ -109,15 +109,10 @@ public class ItemManager {
                     tokenManager.remove(item.getCost());
                     ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun einen §lVote-Streak Schutzpunkt §r§agekauft.");
                     break;
-                case GOLDEN_APPLE:
-                    VoteInventories.getAmountOfItems().put(player.getUniqueId(), 1);
-                    VoteInventories.getCurrentItem().put(player.getUniqueId(), Items.GOLDEN_APPLE);
-                    VoteInventories.openAmount(player);
-                    break;
 
-                case ENCHANTED_GOLDEN_APPLE:
+                case GOLDEN_APPLE, ENCHANTED_GOLDEN_APPLE:
                     VoteInventories.getAmountOfItems().put(player.getUniqueId(), 1);
-                    VoteInventories.getCurrentItem().put(player.getUniqueId(), Items.ENCHANTED_GOLDEN_APPLE);
+                    VoteInventories.getCurrentItem().put(player.getUniqueId(), item);
                     VoteInventories.openAmount(player);
                     break;
 

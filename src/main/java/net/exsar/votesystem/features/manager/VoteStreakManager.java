@@ -35,9 +35,10 @@ public class VoteStreakManager {
                         ChatUtils.sendMessage(
                                 Objects.requireNonNull(player.getPlayer()),
                                 ChatUtils.ChatType.INFO,
-                                "Dein Vote-Streak ist geblieben. Dafür wurde dir ein Vote-Schutzpunkt entfernt."
+                                "Dein Vote-Streak ist geblieben. Für den Vote-Schutz wurde dir ein Vote-Schutzpunkt entfernt."
                         );
                     }
+                    data.addStreak();
                 } else {
                     data.resetStreak();
                 }

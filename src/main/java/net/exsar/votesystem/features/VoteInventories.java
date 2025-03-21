@@ -153,7 +153,6 @@ public class VoteInventories {
         inventory.setItem(6, SkullDatabase.build(SkullDatabase.Skulls.WHITE_PLUS, "§a§l+ 16 §f§aStück", 16, "§7Anzahl: §f§l" + amount + " §8(Maximum: §f§l2.304§8)"));
         inventory.setItem(7, SkullDatabase.build(SkullDatabase.Skulls.WHITE_PLUS, "§a§l+ 64 §f§aStück", 64, "§7Anzahl: §f§l" + amount + " §8(Maximum: §f§l2.304§8)"));
 
-        inventory.setItem(18, new ItemBuilder(Material.BARRIER).displayName("§c§lEingabe beenden").build());
         inventory.setItem(26, new ItemBuilder(Material.EMERALD_BLOCK).displayName("§a§lEingabe bestätigen").lore("§7Anzahl: §f§l" + amount).build());
 
         player.openInventory(inventory);

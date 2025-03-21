@@ -34,7 +34,8 @@ public class VoteManager {
     }
 
     public static void initialize() {
-        try (PreparedStatement statement = DatabaseManager.getConnection().getConnection().prepareStatement("SELECT * FROM players"); ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = DatabaseManager.getConnection().getConnection().prepareStatement("SELECT * FROM players");
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 UUID uuid = UUID.fromString(resultSet.getString("player"));
                 int token = resultSet.getInt("tokens");
