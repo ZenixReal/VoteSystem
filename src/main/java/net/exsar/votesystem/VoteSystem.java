@@ -1,5 +1,6 @@
 package net.exsar.votesystem;
 
+import lombok.Getter;
 import net.exsar.votesystem.commands.TokensAdminCommand;
 import net.exsar.votesystem.commands.VoteCommand;
 import net.exsar.votesystem.features.manager.ItemManager;
@@ -14,7 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class VoteSystem extends JavaPlugin {
 
-    private final String prefix = "§8[§9§lVote-System§8] §r";
+    @Getter
+    private static final String prefix = "§8[§9§lVote-System§8] §r";
 
     @Override
     public void onEnable() {

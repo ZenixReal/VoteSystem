@@ -3,12 +3,8 @@ package net.exsar.votesystem.features.manager;
 import net.exsar.votesystem.features.objects.PlayerData;
 import net.exsar.votesystem.features.objects.VoteSiteData;
 import net.exsar.votesystem.utils.ChatUtils;
-import net.exsar.votesystem.utils.DatabaseManager;
 import org.bukkit.OfflinePlayer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Objects;
 
 public class VoteStreakManager {
@@ -34,8 +30,7 @@ public class VoteStreakManager {
                     if(player.isOnline()) {
                         ChatUtils.sendMessage(
                                 Objects.requireNonNull(player.getPlayer()),
-                                ChatUtils.ChatType.INFO,
-                                "Dein Vote-Streak ist geblieben. Für den Vote-Schutz wurde dir ein Vote-Schutzpunkt entfernt."
+                                "§6§lDein Vote-Streak ist geblieben.§r §6Für den Vote-Schutz wurde dir ein Vote-Schutzpunkt entfernt."
                         );
                     }
                     data.addStreak();
@@ -58,18 +53,18 @@ public class VoteStreakManager {
         switch (streak) {
             case 10:
                 if(player.isOnline()) {
-                    ChatUtils.sendMessage(Objects.requireNonNull(player.getPlayer()), ChatUtils.ChatType.SUCCESS, "500 €");
+                    ChatUtils.sendMessage(Objects.requireNonNull(player.getPlayer()), "500 €");
                 }
                 break;
             case 20:
                 if(player.isOnline()) {
-                    ChatUtils.sendMessage(Objects.requireNonNull(player.getPlayer()), ChatUtils.ChatType.SUCCESS, "VIP Premium 7 Tage");
+                    ChatUtils.sendMessage(Objects.requireNonNull(player.getPlayer()), "VIP Premium 7 Tage");
                 }
                 break;
 
             case 30:
                 if(player.isOnline()) {
-                    ChatUtils.sendMessage(Objects.requireNonNull(player.getPlayer()), ChatUtils.ChatType.SUCCESS, "VIP Pro 1 Monat");
+                    ChatUtils.sendMessage(Objects.requireNonNull(player.getPlayer()), "VIP Pro 1 Monat");
                 }
                 break;
         }

@@ -60,14 +60,14 @@ public class ItemManager {
                 if(!hasBought(player, item)) {
                     registerUnique(player, item);
                 } else {
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.ERROR, "Du kannst dies nicht erneut kaufen.");
+                    ChatUtils.sendMessage(player, "§cDu kannst dies nicht erneut kaufen.");
                     return;
                 }
             }
 
             if(item.isPhysical()) {
                 if(!InventoryTool.hasInventorySpace(player)) {
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du hast kein Platz im Inventar.");
+                    ChatUtils.sendMessage(player, "§cDu hast kein Platz im Inventar.");
                     return;
                 }
             }
@@ -83,31 +83,31 @@ public class ItemManager {
                                     .addEnchant(Enchantment.FORTUNE, 4)
                                     .build());
                     tokenManager.remove(item.getCost());
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun §lSuperwerkzeug §r§aerfolgreich gekauft.");
+                    ChatUtils.sendMessage(player, "Du hast nun §lSuperwerkzeug §r§aerfolgreich gekauft.");
                     break;
 
                 case X15_FLY_TICKETS:
                     player.closeInventory();
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun §l15x Flugtickets für Farmwelt §r§aerhalten.");
+                    ChatUtils.sendMessage(player, "Du hast nun §l15x Flugtickets für Farmwelt §r§aerhalten.");
                     tokenManager.remove(item.getCost());
                     break;
 
                 case RANDOM_EFFECT_PACKAGE:
                     player.closeInventory();
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun ein zufälligen Effektpaket erhalten! Siehe über §l'/effekte' §r§anach.");
+                    ChatUtils.sendMessage(player, "Du hast nun ein zufälligen Effektpaket erhalten! Siehe über §l'/effekte' §r§anach.");
                     tokenManager.remove(item.getCost());
                     break;
 
                 case STREAK_SAVER:
                     if(data.getStreak() < 60) {
-                        ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du kannst dies kaufen, wenn du länger als 2 Monate aktiv votest.");
+                        ChatUtils.sendMessage(player, "§cDu kannst dies kaufen, wenn du länger als 2 Monate aktiv votest.");
                         return;
                     }
                     player.closeInventory();
                     data.addSaver();
                     new VoteManager(player).update(data);
                     tokenManager.remove(item.getCost());
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Du hast nun einen §lVote-Streak Schutzpunkt §r§agekauft.");
+                    ChatUtils.sendMessage(player, "Du hast nun einen §lVote-Streak Schutzpunkt §r§agekauft.");
                     break;
 
                 case GOLDEN_APPLE, ENCHANTED_GOLDEN_APPLE:
@@ -123,7 +123,7 @@ public class ItemManager {
                     break;
             }
         } else {
-            ChatUtils.sendMessage(player, ChatUtils.ChatType.ERROR, "Du hast dafür zu wenig Vote-Tokens.");
+            ChatUtils.sendMessage(player, "§cDu hast dafür zu wenig Vote-Tokens.");
         }
     }
 }

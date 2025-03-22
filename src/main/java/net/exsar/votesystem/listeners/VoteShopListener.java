@@ -118,7 +118,7 @@ public class VoteShopListener implements Listener {
                         TokenManager tokenManager = new TokenManager(player);
                         ItemStack give = new ItemStack(item.getType(), currentAmount);
                         if(!tokenManager.check(cost)) {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du hast dafür zu wenig Tokens.");
+                            ChatUtils.sendMessage(player, "§cDu hast dafür zu wenig Tokens.");
                             return;
                         }
 
@@ -129,7 +129,7 @@ public class VoteShopListener implements Listener {
                             VoteInventories.getAmountOfItems().remove(player.getUniqueId());
                             player.getInventory().addItem(give);
                         } else {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.WARNING, "Du hast nicht genügend Platz.");
+                            ChatUtils.sendMessage(player, "§cDu hast nicht genügend Platz.");
                         }
                         break;
                 }

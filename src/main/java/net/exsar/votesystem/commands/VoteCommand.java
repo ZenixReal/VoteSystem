@@ -2,20 +2,15 @@ package net.exsar.votesystem.commands;
 
 import net.exsar.votesystem.VoteSystem;
 import net.exsar.votesystem.features.VoteInventories;
-import net.exsar.votesystem.features.manager.TokenManager;
-import net.exsar.votesystem.features.manager.VoteManager;
-import net.exsar.votesystem.features.manager.VoteStreakManager;
-import net.exsar.votesystem.features.objects.PlayerData;
-import net.exsar.votesystem.features.objects.VoteSiteData;
+import net.exsar.votesystem.features.manager.*;
+import net.exsar.votesystem.features.objects.*;
 import net.exsar.votesystem.utils.ChatUtils;
 import net.exsar.votesystem.utils.Command;
 import net.exsar.votesystem.utils.NumberUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.event.*;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,7 +32,7 @@ public class VoteCommand extends Command<VoteSystem> {
                 TextComponent site1;
                 TextComponent site2;
                 if(voteSiteData.isFirst_site() && voteSiteData.isSecond_site()) {
-                    ChatUtils.sendMessage(player, ChatUtils.ChatType.INFO, "Du hast bereits gevotet.");
+                    ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
                     return;
                 }
                 if(!voteSiteData.isFirst_site()) {
@@ -64,18 +59,17 @@ public class VoteCommand extends Command<VoteSystem> {
                 );
             } else if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("shop")) {
-                    // Auch mit einem NPC möglich.
                     VoteInventories.openShop(player);
                 }
             } else if(args.length == 2) {
                 if(args[0].equalsIgnoreCase("info")) {
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                    Player target = Bukkit.getPlayer(args[1]);
                     if (!player.hasPermission("votesystem.view")) {
-                        ChatUtils.sendMessage(player, ChatUtils.ChatType.ERROR, "Du hast dazu keine Berechtigung.");
+                        ChatUtils.sendMessage(player, "§cDu hast dazu keine Berechtigung.");
                         return;
                     }
-                    if (!target.hasPlayedBefore()) {
-                        ChatUtils.sendMessage(player, ChatUtils.ChatType.ERROR, "Dieser Spieler war zuvor noch nicht auf dem Server gewesen.");
+                    if (target == null || !target.isOnline()) {
+                        ChatUtils.sendMessage(player, "§cDer Spieler ist nicht Online.");
                         return;
                     }
                     PlayerData data = VoteManager.getData(target);
@@ -111,7 +105,7 @@ public class VoteCommand extends Command<VoteSystem> {
                     VoteStreakManager voteStreakManager = new VoteStreakManager(player);
                     if(args[1].equalsIgnoreCase("1")) {
                         if(!voteSiteData.isFirst_site()) {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
+                            ChatUtils.sendMessage(player, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
                             tokenManager.add(voteManager.getStreakToken());
                             voteSiteData.setFirst_site(true);
                             data.setVote(data.getVote() + 1);
@@ -121,11 +115,11 @@ public class VoteCommand extends Command<VoteSystem> {
                             }
                             VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
                         } else {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.INFO, "Du hast bereits gevotet.");
+                            ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
                         }
                     } else if(args[1].equalsIgnoreCase("2")) {
                         if(!voteSiteData.isSecond_site()) {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.SUCCESS, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
+                            ChatUtils.sendMessage(player, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
                             tokenManager.add(voteManager.getStreakToken());
                             voteSiteData.setSecond_site(true);
                             data.setVote(data.getVote() + 1);
@@ -135,7 +129,7 @@ public class VoteCommand extends Command<VoteSystem> {
                             }
                             VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
                         } else {
-                            ChatUtils.sendMessage(player, ChatUtils.ChatType.INFO, "Du hast bereits gevotet.");
+                            ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
                         }
                     }
                 }
@@ -150,12 +144,6 @@ public class VoteCommand extends Command<VoteSystem> {
             list.add("shop");
             if(sender.hasPermission("votesystem.view")) {
                 list.add("info");
-            }
-        } else if(args.length == 2) {
-            if(args[0].equalsIgnoreCase("info") && sender.hasPermission("votesystem.view")) {
-                for(OfflinePlayer player : Bukkit.getOfflinePlayers()) {
-                    list.add(player.getName());
-                }
             }
         }
         return list.stream()
