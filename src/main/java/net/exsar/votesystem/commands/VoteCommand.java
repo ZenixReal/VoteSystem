@@ -62,76 +62,79 @@ public class VoteCommand extends Command<VoteSystem> {
                     VoteInventories.openShop(player);
                 }
             } else if(args.length == 2) {
-                if(args[0].equalsIgnoreCase("info")) {
-                    Player target = Bukkit.getPlayer(args[1]);
-                    if (!player.hasPermission("votesystem.view")) {
-                        ChatUtils.sendMessage(player, "§cDu hast dazu keine Berechtigung.");
-                        return;
-                    }
-                    if (target == null || !target.isOnline()) {
-                        ChatUtils.sendMessage(player, "§cDer Spieler ist nicht Online.");
-                        return;
-                    }
-                    PlayerData data = VoteManager.getData(target);
-                    VoteSiteData viewSiteData = VoteManager.getVoteSite(target);
-                    if(voteSiteData == null) {
-                        VoteSiteData newData = new VoteSiteData(false, false);
-                        VoteManager.getVoteSiteDataHashMap().put(target.getUniqueId(), newData);
-                        viewSiteData = newData;
-                    }
-                    String first = "§cNein";
-                    String second = "§cNein";
-
-                    if (viewSiteData.isFirst_site()) {
-                        first = "§aJa";
-                    }
-                    if (viewSiteData.isSecond_site()) {
-                        second = "§aJa";
-                    }
-
-                    player.sendMessage("                   §6»  §eVote-Informationen von " + target.getName() + "  §6«");
-                    player.sendMessage("§r§e§m                               §r");
-                    player.sendMessage("§7 - Tokens: §f" + data.formattedTokens());
-                    player.sendMessage("§7 - Vote-Streak: §r" + data.getStreak());
-                    player.sendMessage("§7 - Votes: §f" + data.getVote());
-                    player.sendMessage("§7 - Vote-Streak Schutzpunkt: §f" + data.getSaver());
-                    player.sendMessage("§7 - Zuletzt Vote-Streak aufgebaut: " + NumberUtils.timeFromLong(data.getLastVote()));
-                    player.sendMessage("§7 - 1. Seite: §f" + first);
-                    player.sendMessage("§7 - 2. Seite: §f" + second);
-                } else if(args[0].equalsIgnoreCase("set")) {
-                    TokenManager tokenManager = new TokenManager(player);
-                    PlayerData data = VoteManager.getData(player);
-                    VoteManager voteManager = new VoteManager(player);
-                    VoteStreakManager voteStreakManager = new VoteStreakManager(player);
-                    if(args[1].equalsIgnoreCase("1")) {
-                        if(!voteSiteData.isFirst_site()) {
-                            ChatUtils.sendMessage(player, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
-                            tokenManager.add(voteManager.getStreakToken());
-                            voteSiteData.setFirst_site(true);
-                            data.setVote(data.getVote() + 1);
-                            voteManager.update(data);
-                            if(voteSiteData.isSecond_site()) {
-                                voteStreakManager.addVoteStreak();
-                            }
-                            VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
-                        } else {
-                            ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
+                switch (args[0]) {
+                    case "info":
+                        Player target = Bukkit.getPlayer(args[1]);
+                        if (!player.hasPermission("votesystem.view")) {
+                            ChatUtils.sendMessage(player, "§cDu hast dazu keine Berechtigung.");
+                            return;
                         }
-                    } else if(args[1].equalsIgnoreCase("2")) {
-                        if(!voteSiteData.isSecond_site()) {
-                            ChatUtils.sendMessage(player, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
-                            tokenManager.add(voteManager.getStreakToken());
-                            voteSiteData.setSecond_site(true);
-                            data.setVote(data.getVote() + 1);
-                            voteManager.update(data);
-                            if(voteSiteData.isFirst_site()) {
-                                voteStreakManager.addVoteStreak();
-                            }
-                            VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
-                        } else {
-                            ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
+                        if (target == null || !target.isOnline()) {
+                            ChatUtils.sendMessage(player, "§cDer Spieler ist nicht Online.");
+                            return;
                         }
-                    }
+                        PlayerData data = VoteManager.getData(target);
+                        VoteSiteData viewSiteData = VoteManager.getVoteSite(target);
+                        if(voteSiteData == null) {
+                            VoteSiteData newData = new VoteSiteData(false, false);
+                            VoteManager.getVoteSiteDataHashMap().put(target.getUniqueId(), newData);
+                            viewSiteData = newData;
+                        }
+                        String first = "§cNein";
+                        String second = "§cNein";
+
+                        if (viewSiteData.isFirst_site()) {
+                            first = "§aJa";
+                        }
+                        if (viewSiteData.isSecond_site()) {
+                            second = "§aJa";
+                        }
+
+                        player.sendMessage("                   §6»  §eVote-Informationen von " + target.getName() + "  §6«");
+                        player.sendMessage("§r§e§m                               §r");
+                        player.sendMessage("§7 - Tokens: §f" + data.formattedTokens());
+                        player.sendMessage("§7 - Vote-Streak: §r" + data.getStreak());
+                        player.sendMessage("§7 - Votes: §f" + data.getVote());
+                        player.sendMessage("§7 - Vote-Streak Schutzpunkt: §f" + data.getSaver());
+                        player.sendMessage("§7 - Zuletzt Vote-Streak aufgebaut: " + NumberUtils.timeFromLong(data.getLastVote()));
+                        player.sendMessage("§7 - 1. Seite: §f" + first);
+                        player.sendMessage("§7 - 2. Seite: §f" + second);
+                        break;
+                    case "set":
+                        TokenManager tokenManager = new TokenManager(player);
+                        PlayerData playerData = VoteManager.getData(player);
+                        VoteManager voteManager = new VoteManager(player);
+                        VoteStreakManager voteStreakManager = new VoteStreakManager(player);
+                        if(args[1].equalsIgnoreCase("1")) {
+                            if(!voteSiteData.isFirst_site()) {
+                                ChatUtils.sendMessage(player, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
+                                tokenManager.add(voteManager.getStreakToken());
+                                voteSiteData.setFirst_site(true);
+                                playerData.setVote(playerData.getVote() + 1);
+                                voteManager.update(playerData);
+                                if(voteSiteData.isSecond_site()) {
+                                    voteStreakManager.addVoteStreak();
+                                }
+                                VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
+                            } else {
+                                ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
+                            }
+                        } else if(args[1].equalsIgnoreCase("2")) {
+                            if(!voteSiteData.isSecond_site()) {
+                                ChatUtils.sendMessage(player, "Vielen Dank fürs Voten! Als dank erhältst du " + voteManager.getStreakToken() + " Vote-Token!");
+                                tokenManager.add(voteManager.getStreakToken());
+                                voteSiteData.setSecond_site(true);
+                                playerData.setVote(playerData.getVote() + 1);
+                                voteManager.update(playerData);
+                                if(voteSiteData.isFirst_site()) {
+                                    voteStreakManager.addVoteStreak();
+                                }
+                                VoteManager.getVoteSiteDataHashMap().put(player.getUniqueId(), voteSiteData);
+                            } else {
+                                ChatUtils.sendMessage(player, "Du hast bereits gevotet.");
+                            }
+                        }
+                        break;
                 }
             }
         }
